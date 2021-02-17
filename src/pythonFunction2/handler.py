@@ -1,6 +1,11 @@
 import json
+import random
 def handler(event, context):
     # Log the event argument for debugging and for use in local development.
     print(json.dumps(event))
-
-    return {}
+    i = [0,3,4,5,32,3,4,5]
+    
+    
+    return {
+        "testing": random.choice(i)
+    }
