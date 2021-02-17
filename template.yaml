@@ -13,6 +13,9 @@ Resources:
           /:
             get:
               responses: {}
+          /root:
+            get:
+              responses: {}
       FailOnWarnings: true
   pythonFunction2:
     Type: AWS::Serverless::Function
@@ -34,6 +37,30 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /
+            Method: GET
+            ApiId: !Ref HttpApi
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-Function
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: Function
+      CodeUri: src/Function
+      Handler: index.handler
+      Runtime: nodejs12.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+      Events:
+        HttpApiGETroot:
+          Type: HttpApi
+          Properties:
+            Path: /root
             Method: GET
             ApiId: !Ref HttpApi
             PayloadFormatVersion: '2.0'
